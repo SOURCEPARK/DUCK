@@ -1,39 +1,51 @@
 void eject (String command) {
-    Serial.print("Ejecting row:"); 
-    char tmp[] = {
-      '\0','\0','\0'        };
-    tmp[0] = command[1];
-    int row = atoi(tmp);
-    Serial.print(row); 
-    Serial.print(" tube:"); 
-    int col = atoi(&command[2]);
-    Serial.println(col);
 
-    if (row>5 || row<0 || col>7||col<0) {
-      Serial.println("RANGEERROR");
-    }
-    else {
-      String line = cmd[row]; 
+  digitalWrite(13, HIGH);
+  digitalWrite(getTube(command), LOW);
 
-      tmp[0] = line[col*2];
-      tmp[1] = line[col*2+1];
-      if (String(tmp).compareTo("NN")!=0) {
-        Serial.println(tmp);
-        int pin = atoi(tmp);
+  int ref = analogRead(PIN_ANALOG_IN);
+  int counter = 500;
+  int a;
+  int transitions = 2;
 
-        Serial.print(" signaling pin: ");
-        Serial.println(pin);
-        Serial.println(line);
-        Serial.println(line[col]);
-        digitalWrite(13, HIGH);
+  while (counter > 0) {
+    counter--;
+    a = analogRead(PIN_ANALOG_IN);
+//    Serial.print("    RD: ");
+//    Serial.print(a);
+//    Serial.print(" --  REF: ");
+//    Serial.print(ref);
+//    Serial.print("  Delta:");
+//    Serial.println(abs(ref - a));
 
-        digitalWrite(pin, LOW);
-        delay(2000);    
-        digitalWrite(pin, HIGH);
-        digitalWrite(13, LOW);    
-      }
-      else {
-        Serial.println("INDEXERROR");
+    if (abs(ref - a) >= 18) {
+      transitions --;
+      ref = analogRead(PIN_ANALOG_IN);
+//      Serial.println("Transition !!");
+      if (transitions == 0) {
+        break;
       }
     }
+    delay (5);
+  }
+  Serial.println("OK");
+
+//  Serial.print("    RD: ");
+//  Serial.print(a);
+//  Serial.print(" --  REF: ");
+//  Serial.print(ref);
+//  Serial.print(" --  C: ");
+//  Serial.print(counter);
+//  Serial.print("  Delta:");
+//  Serial.println(abs(ref - a));
+//  digitalWrite(13, LOW);
+//  digitalWrite(2, HIGH);
+//  Serial.println (" [OK]");
+
+
+
+  digitalWrite(getTube(command), HIGH);
+  digitalWrite(13, LOW);
+
 }
+

@@ -17,7 +17,7 @@ void setup() {
   pinMode(3,OUTPUT);
   pinMode(4,OUTPUT);
   pinMode(5,OUTPUT);
-  pinMode(7,INPUT);
+  pinMode(6,OUTPUT);
   while (!Serial) {
     delay (10);
   }
@@ -25,11 +25,12 @@ void setup() {
   digitalWrite(3, HIGH);
   digitalWrite(4, HIGH);
   digitalWrite(5, HIGH);
+  digitalWrite(6, HIGH);
   digitalWrite(13, LOW);
   
   pinMode(A5, INPUT_PULLUP);
   
-  Serial.print("DUCK Ready\r\n>");
+  Serial.print("DUCK Ready\r\n");
 }
 
 void loop() {
@@ -38,7 +39,9 @@ void loop() {
   switch(s[0]) {
     case 'e': eject (s);
               break;
-    case 'c': calibrate();
+    case 'c': calibrate(s);
+              break;
+    case 's': oneStep(s);
               break;
     default: Serial.print (" ### Error ### Unknown command received: ");
         Serial.println(s);
