@@ -1,16 +1,23 @@
 void calibrate (String s) {
+  
   Serial.println (" *** Calibrating");
   Serial.println ("          Powering drive 1");
-
-  int ref = analogRead(PIN_ANALOG_IN);
+ 
   int counter = 2500;
   int a;
+
+  int row = getRow(s);
+  int col = getCol(s);
+  int analog_pin = analogs[row]; 
+  int ref = analogRead(analog_pin);
   
   digitalWrite(13, HIGH);
-  digitalWrite(getTube(s), LOW);
+  digitalWrite(row, LOW);
+  digitalWrite(col, LOW);
+  
   while (counter > 0) {
     counter--;
-    a = analogRead(PIN_ANALOG_IN);
+    a = analogRead(analog_pin);
     Serial.print("    RD: ");
     Serial.print(a);
     Serial.print(" --  REF: ");
@@ -33,7 +40,8 @@ void calibrate (String s) {
   Serial.print("  Delta:");
   Serial.println(abs(ref-a));
   digitalWrite(13, LOW);
-  digitalWrite(getTube(s), HIGH);
+  digitalWrite(row, HIGH);
+  digitalWrite(col, HIGH);
   Serial.println (" [OK]");
 }
 
