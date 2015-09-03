@@ -9,8 +9,9 @@ String cmd[] = {
 };
 
 int relais[] = { 22,24,26,28,30,32,38,40,42,44,46,48,50,52,34,36 };
-int rows [] = { 22,24,26,28,30,32 };
-int cols[] = { 38,40,42,44,46,48,50,52,34,36 };
+int rows [] = { 32,30,28,26,24,22 };
+//int cols[] = { 38,40,42,44,46,48,50,52,34,36 };
+int cols[] = { 52, 50, 48, 46, 44, 42, 40, 38, 36, 34 };
 int analogs[] = { A10, A11, A12, A13, A14, A15 };
 
 int PIN_ANALOG_IN = 5;
@@ -38,12 +39,21 @@ void loop() {
     switch(s[0]) {
       case 'e': eject (s);
                 break;
-      case 'c': calibrate(s);
+      case 'k': calibrate(s);
                 break;
       case 's': oneStep(s);
                 break;
+      case 'm': motor(s);
+                break;
+      case 'c': colOn(s);
+                break;
+      case 'r': rowOn(s);
+                break;
+      case 'x' :allOff();
+                break;
       default: Serial.print (" ### Error ### Unknown command received: ");
           Serial.println(s);
+          allOff();
     }
   }
   delay(10);
